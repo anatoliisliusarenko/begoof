@@ -36,6 +36,16 @@
             </div>
             <div class="box-body">
               Start creating your amazing application!
+
+              <h3>List of users:</h3>
+              {% for user in users %}
+
+              <br>{{ loop.index }}. {{ user.username }} - {{ user.email }} - {{ user.fullName }}
+
+              {% endfor %}
+
+
+
             </div>
             <!-- /.box-body -->
             <div class="box-footer">
