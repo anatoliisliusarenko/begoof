@@ -5,3 +5,6 @@ default:
 login:
     path: /login
     defaults: { _controller: AppBundle:Auth:login }
+
+logout:
+    path: /logout

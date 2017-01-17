@@ -8,6 +8,9 @@ use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller {
     public function indexAction(Request $request) {
+        
+    	//var_dump($_SESSION);
+
         $users = $this->getDoctrine()->getRepository('AppBundle:User')->findAll();
 
         // replace this example code with whatever you need

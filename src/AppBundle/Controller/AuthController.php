@@ -9,6 +9,11 @@ use Symfony\Component\HttpFoundation\Request;
 class AuthController extends Controller {
 	
     public function loginAction(Request $request) {
-        return $this->render('AppBundle:Auth:login.html.twig');
+
+    	$error = $this->get('security.authentication_utils')->getLastAuthenticationError();
+
+        return $this->render('AppBundle:Auth:login.html.twig', [
+        	'error' => $error
+        ]);
     }
 }
