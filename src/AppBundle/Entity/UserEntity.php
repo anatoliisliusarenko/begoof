@@ -6,12 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
- * User
+ * UserEntity
  *
  * @ORM\Table(name="users")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
  */
-class User implements AdvancedUserInterface, \Serializable {
+class UserEntity implements AdvancedUserInterface, \Serializable {
     /**
      * @var int
      *
@@ -100,7 +100,7 @@ class User implements AdvancedUserInterface, \Serializable {
      *
      * @param string $email
      *
-     * @return User
+     * @return UserEntity
      */
     public function setEmail($email) {
         $this->email = $email;
@@ -122,7 +122,7 @@ class User implements AdvancedUserInterface, \Serializable {
      *
      * @param string $password
      *
-     * @return User
+     * @return UserEntity
      */
     public function setPassword($password) {
         $this->password = $password;
@@ -135,7 +135,7 @@ class User implements AdvancedUserInterface, \Serializable {
      *
      * @param string $username
      *
-     * @return User
+     * @return UserEntity
      */
     public function setUsername($username) {
         $this->username = $username;
@@ -148,7 +148,7 @@ class User implements AdvancedUserInterface, \Serializable {
      *
      * @param string $fullName
      *
-     * @return User
+     * @return UserEntity
      */
     public function setFullName($fullName) {
         $this->fullName = $fullName;
@@ -170,7 +170,7 @@ class User implements AdvancedUserInterface, \Serializable {
      *
      * @param \DateTime $registered
      *
-     * @return User
+     * @return UserEntity
      */
     public function setRegistered($registered) {
         $this->registered = $registered;
@@ -192,7 +192,7 @@ class User implements AdvancedUserInterface, \Serializable {
      *
      * @param \DateTime $lastActive
      *
-     * @return User
+     * @return UserEntity
      */
     public function setLastActive($lastActive) {
         $this->lastActive = $lastActive;
@@ -214,7 +214,7 @@ class User implements AdvancedUserInterface, \Serializable {
      *
      * @param boolean $active
      *
-     * @return User
+     * @return UserEntity
      */
     public function setActive($active) {
         $this->active = $active;
@@ -236,7 +236,7 @@ class User implements AdvancedUserInterface, \Serializable {
      *
      * @param string $role
      *
-     * @return User
+     * @return UserEntity
      */
     public function setRole($role) {
         $this->role = $role;

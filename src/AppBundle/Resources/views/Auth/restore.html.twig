@@ -1,0 +1,28 @@
+{% extends 'AppBundle::auth_wrapper.html.twig' %}
+
+{% block title %}Restore{% endblock %}
+
+{% block content %}
+
+	<p class="login-box-msg">Restore your password to care about your friends</p>
+
+    <form action="{{ path('restore') }}" method="post">
+      <div class="form-group has-feedback">
+        <input type="text" class="form-control" placeholder="Username/Email" name="_username">
+        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+      </div>
+      <div class="row">
+        <div class="col-xs-8">
+        </div>
+        <!-- /.col -->
+        <div class="col-xs-4">
+          <button type="submit" class="btn btn-primary btn-block btn-flat">Restore</button>
+        </div>
+        <!-- /.col -->
+      </div>
+    </form>
+
+    <a href="{{ path('register') }}">I want to become a good friend</a><br>
+    <a href="{{ path('login') }}" class="text-center">I have already a good friend</a>
+
+{% endblock %}

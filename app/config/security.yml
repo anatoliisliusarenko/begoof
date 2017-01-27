@@ -1,12 +1,12 @@
 security:
     encoders:
-        AppBundle\Entity\User:
+        AppBundle\Entity\UserEntity:
             algorithm: bcrypt
 
     providers:
         begoof_db_provider:
             entity:
-                class: AppBundle:User
+                class: AppBundle:UserEntity
 
     firewalls:
         dev:
@@ -19,16 +19,21 @@ security:
             form_login:
                 login_path: login
                 check_path: login
+                username_parameter: login_form[username]
+                password_parameter: login_form[password]
             logout:
                 path: logout
                 target: default
             remember_me:
                 secret: "%secret%"
                 lifetime: "%remember_me_lifetime%"
+                remember_me_parameter: login_form[remember_me]
 
     role_hierarchy:
         ROLE_ADMIN: ROLE_USER
 
     access_control:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/restore, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/, roles: ROLE_USER }

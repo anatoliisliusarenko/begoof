@@ -7,3 +7,6 @@ services:
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+    app.service.user:
+        class: AppBundle\Service\UserService
+        arguments: ["@doctrine.orm.entity_manager", "@security.token_storage"]
