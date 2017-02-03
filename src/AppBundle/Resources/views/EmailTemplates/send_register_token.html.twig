@@ -1,0 +1,11 @@
+<p>Nice to meet you, <strong>{{ fullName }}</strong>!</p>
+
+<p>You read this letter, because your email address was provided during registration on <a href="{{ url('default') }}">{{ url('default') }}</a></p>
+
+<p>To finish registration and become a good friend, could you please follow the next link?</p>
+
+<p><a href="{{ url('verify_register', { 'token' : token }) }}">{{ url('verify_register', { 'token' : token }) }}</a></p>
+
+<p>Did not do this? You can just skip this email.</p>
+
+<p>Be good friend ^_^</p>

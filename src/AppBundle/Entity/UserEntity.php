@@ -4,6 +4,8 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * UserEntity
@@ -32,6 +34,10 @@ class UserEntity implements AdvancedUserInterface, \Serializable {
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=255, unique=true)
+     *
+     * @Assert\NotBlank()
+     * @Assert\Type("string")
+     * @Assert\Regex("/^[\w\.\-]+\@[\w\.\-]+$/") //@TODO VALIDATION FOR EMAIL
      */
     private $email;
 
@@ -39,6 +45,10 @@ class UserEntity implements AdvancedUserInterface, \Serializable {
      * @var string
      *
      * @ORM\Column(name="password", type="string", length=255)
+     *
+     * @Assert\NotBlank()
+     * @Assert\Type("string")
+     * @Assert\GreaterThan(5) //@TODO VALIDATION FOR CONTAINING DIFFERENT TYPE OF CHARACTERS
      */
     private $password;
 
@@ -46,6 +56,9 @@ class UserEntity implements AdvancedUserInterface, \Serializable {
      * @var string
      *
      * @ORM\Column(name="full_name", type="string", length=255)
+     *
+     * @Assert\NotBlank()
+     * @Assert\Type("string")
      */
     private $fullName;
 
@@ -81,7 +94,12 @@ class UserEntity implements AdvancedUserInterface, \Serializable {
     * Counstructor of the class
     */
     public function __construct() {
-        $this->active = true;
+        $now = new \DateTime();
+        $this->registered = $now;
+        $this->lastActive = $now;
+        $this->active = false;
+        $this->role = 'ROLE_USER';
+        $this->tokens = new ArrayCollection();
     }
 
     /* ===== Public getters and setters ===== */
@@ -252,6 +270,13 @@ class UserEntity implements AdvancedUserInterface, \Serializable {
     public function getRole() {
         return $this->role;
     }
+
+    /* ===== Entity Relationships ===== */
+
+    /**
+    * @ORM\OneToMany(targetEntity="TokenEntity", mappedBy="user")
+    */
+    private $tokens;
 
     /* ===== Methods of AdvancedUserInterface ===== */
 

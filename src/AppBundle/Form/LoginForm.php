@@ -16,7 +16,7 @@ class LoginForm extends AbstractType {
 			->setMethod($options['method'])
 			->add('username', TextType::class, ['label' => 'Username/Email'])
 			->add('password', PasswordType::class, ['label' => 'Password'])
-			->add('remember_me', CheckboxType::class, ['label' => 'Remember Me For 1 Year', 'required' => false])
+			->add('remember_me', CheckboxType::class, ['mapped' => false, 'label' => 'Remember Me For 1 Year', 'required' => false])
 			->add('submit', SubmitType::class, ['label' => 'Log In'])
 		;
 

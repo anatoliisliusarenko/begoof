@@ -1,6 +1,10 @@
+# Default Controller #
+
 default:
     path: /
     defaults: { _controller: AppBundle:Default:index }
+
+# Auth Controller #
 
 login:
     path: /login
@@ -16,3 +20,13 @@ restore:
 
 logout:
     path: /logout
+
+# Verify Controller #
+
+verify_register:
+    path: /verify/register
+    defaults: { _controller: AppBundle:Verify:register }
+
+verify_restore:
+    path: /verify/restore
+    defaults: { _controller: AppBundle:Verify:restore }

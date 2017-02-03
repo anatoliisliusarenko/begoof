@@ -5,17 +5,16 @@ namespace AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Form\LoginForm;
-use AppBundle\Object\LoginObject;
 use AppBundle\Form\RegisterForm;
-use AppBundle\Object\RegisterObject;
 use AppBundle\Entity\UserEntity;
+use AppBundle\Entity\TokenEntity;
 
 class AuthController extends Controller {
 	
     public function loginAction(Request $request) {
-    	$loginObject = new LoginObject();
+    	$user = new UserEntity();
 
-    	$form = $this->createForm(LoginForm::class, $loginObject, ['action' => $this->generateUrl('login'), 'method' => 'POST']);
+    	$form = $this->createForm(LoginForm::class, $user, ['action' => $this->generateUrl('login'), 'method' => 'POST']);
 
     	$form->handleRequest($request);
     	
@@ -39,34 +38,32 @@ class AuthController extends Controller {
 
     public function registerAction(Request $request) {
 
-    	$registerObject = new RegisterObject();
-    	$form = $this->createForm(RegisterForm::class, $registerObject, ['action' => $this->generateUrl('register'), 'method' => 'POST']);
+    	$user = new UserEntity();
+    	$form = $this->createForm(RegisterForm::class, $user, ['action' => $this->generateUrl('register'), 'method' => 'POST']);
     	$form->handleRequest($request);
 
     	if ($form->isSubmitted() && $form->isValid()) {
     		$em = $this->getDoctrine()->getManager();
     		$encoder = $this->container->get('security.password_encoder');
-    		$user = new UserEntity();
-    		$email = $registerObject->getEmail();
-    		$username = substr($email, 0, strpos($email, "@"));
-    		$now = new \DateTime();
-    		$password = $encoder->encodePassword($user, $registerObject->getPassword());
+    		$newUser = new UserEntity();
+    		$email = $user->getEmail();
+    		$password = $encoder->encodePassword($newUser, $user->getPassword());
 
-    		$user->setUsername($username);
-    		$user->setEmail($email);
-    		$user->setPassword($password);
-    		$user->setFullName($registerObject->getFullName());
-    		$user->setRegistered($now);
-    		$user->setLastActive($now);
-    		$user->setActive(false);
-    		$user->setRole('ROLE_USER');
+    		$newUser->setUsername($email);
+    		$newUser->setEmail($email);
+    		$newUser->setPassword($password);
+    		$newUser->setFullName($user->getFullName());
 
-    		$em->persist($user);
+    		$em->persist($newUser);
     		$em->flush();
 
-    		//send confirmation email
+    		$token = new TokenEntity($newUser);
+    		$em->persist($token);
+    		$em->flush();
 
-    		$this->addFlash('success', 'User was created, but it is blocked. Email was sent to confirm your person. Please check inbox.');
+    		$this->get('app.service.mailer')->sendRegisterToken($newUser, $token);
+
+    		$this->addFlash('success', 'User was successfully created, but it is blocked for now. Email was sent to confirm your person. Please check inbox.');
 
     		return $this->redirectToRoute('login');
     	}
