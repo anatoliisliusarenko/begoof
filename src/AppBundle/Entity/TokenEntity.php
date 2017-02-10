@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\Exception\InvalidArgumentException;
 
 /**
  * TokenEntity
@@ -12,6 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class TokenEntity
 {
+    public static $ACTION_REGISTER = 'register';
+    public static $ACTION_RESTORE = 'restore';
+
     private $salt = '6a3ee06ea92a5b3bf6c8fefbcaa82f8125255b79';
 
     /**
@@ -33,6 +37,13 @@ class TokenEntity
     /**
      * @var string
      *
+     * @ORM\Column(name="action", type="string", length=255)
+     */
+    private $action;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="value", type="string", length=255)
      */
     private $value;
@@ -47,8 +58,15 @@ class TokenEntity
     /**
     * Counstructor of the class
     */
-    public function __construct(UserEntity $user) {
+    public function __construct(UserEntity $user, $action) {
+        $availableActions = [self::$ACTION_REGISTER, self::$ACTION_RESTORE];
+        
+        if (!in_array($action, $availableActions)) {
+            throw new InvalidArgumentException("An invalid '".$action."' action for token creation!");
+        }
+
         $this->userId = $user->getId();
+        $this->action = $action;
         $this->user = $user;
         $this->value = crypt(time(), $this->salt);
         $this->created = new \DateTime();
@@ -88,6 +106,26 @@ class TokenEntity
     public function getUserId()
     {
         return $this->userId;
+    }
+
+    /**
+     * Checks whether or not token is for 'register' action
+     *
+     * @return bool
+     */
+    public function isForRegister()
+    {
+        return $this->action === 'register';
+    }
+
+    /**
+     * Checks whether or not token is for 'restore' action
+     *
+     * @return bool
+     */
+    public function isForRestore()
+    {
+        return $this->action === 'restore';
     }
 
     /**

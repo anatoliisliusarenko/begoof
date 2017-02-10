@@ -25,4 +25,24 @@ class MailerService {
 		$this->mailer->send($message);
 	}
 
+	public function sendRestoreToken(UserEntity $user, TokenEntity $token) {
+		$message = \Swift_Message::newInstance()
+					->setSubject('Restoration Token | begoof.com')
+					->setFrom('support@begoof.com')
+					->setTo($user->getEmail())
+					->setBody($this->templating->render('AppBundle:EmailTemplates:send_restore_token.html.twig', ['fullName' => $user->getFullName(), 'token' => $token->getValue()]), 'text/html');
+
+		$this->mailer->send($message);
+	}
+
+	public function sendTemporaryPassword(UserEntity $user, string $password) {
+		$message = \Swift_Message::newInstance()
+					->setSubject('Temporary Password | begoof.com')
+					->setFrom('support@begoof.com')
+					->setTo($user->getEmail())
+					->setBody($this->templating->render('AppBundle:EmailTemplates:send_temporary_password.html.twig', ['fullName' => $user->getFullName(), 'password' => $password]), 'text/html');
+
+		$this->mailer->send($message);
+	}
+
 }

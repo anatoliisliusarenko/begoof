@@ -23,7 +23,6 @@ class UserService {
 	public function setLastActive() {
 		if ($this->user) {
 			$this->user->setLastActive(new \DateTime());
-			$this->em->persist($this->user);
 			$this->em->flush();
 		}
 		

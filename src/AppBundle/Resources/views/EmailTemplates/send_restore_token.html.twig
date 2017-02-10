@@ -1,0 +1,11 @@
+<p>Hello good friend, <strong>{{ fullName }}</strong>!</p>
+
+<p>You read this letter, because your email address was provided during restoration process on <a href="{{ url('default') }}">{{ url('default') }}</a></p>
+
+<p>To finish restoration process and to continue care about your friends, could you please follow the next link?</p>
+
+<p><a href="{{ url('verify_restore', { 'token' : token }) }}">{{ url('verify_restore', { 'token' : token }) }}</a></p>
+
+<p>Did not do this? You can just skip this email.</p>
+
+<p>Be good friend ^_^</p>

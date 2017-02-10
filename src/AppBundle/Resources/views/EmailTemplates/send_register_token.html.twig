@@ -1,8 +1,8 @@
 <p>Nice to meet you, <strong>{{ fullName }}</strong>!</p>
 
-<p>You read this letter, because your email address was provided during registration on <a href="{{ url('default') }}">{{ url('default') }}</a></p>
+<p>You read this letter, because your email address was provided during registration process on <a href="{{ url('default') }}">{{ url('default') }}</a></p>
 
-<p>To finish registration and become a good friend, could you please follow the next link?</p>
+<p>To finish registration process and to become a good friend, could you please follow the next link?</p>
 
 <p><a href="{{ url('verify_register', { 'token' : token }) }}">{{ url('verify_register', { 'token' : token }) }}</a></p>
 
