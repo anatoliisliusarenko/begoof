@@ -13,7 +13,7 @@ class VerifyController extends Controller {
         $tokenValue = $request->get('token');
             
     	if (!empty($tokenValue)) {
-            $token = $this->getDoctrine()->getRepository('AppBundle:TokenEntity')->findOneByValue($tokenValue);
+            $token = $this->get('app.service.token')->getTokenByValue($tokenValue);
 
             if ($token != null && $token->isForRegister()) {
                 $user = $token->getUser();
@@ -47,7 +47,7 @@ class VerifyController extends Controller {
     	$tokenValue = $request->get('token');
 
         if (!empty($tokenValue)) {
-            $token = $this->getDoctrine()->getRepository('AppBundle:TokenEntity')->findOneByValue($tokenValue);
+            $token = $this->get('app.service.token')->getTokenByValue($tokenValue);
 
             if ($token != null && $token->isForRestore()) {
                 $user = $token->getUser();
@@ -56,7 +56,7 @@ class VerifyController extends Controller {
                 $differenceInHours = $interval->y*365*24 + $interval->m*30*24 + $interval->d*24 + $interval->h;
 
                 if ($differenceInHours < 24) {
-                    $plainPassword = crypt(time(), 'sdfsdfsdfsd'); ////   use system salt
+                    $plainPassword = $this->get('app.service.token')->generateTokenValue();
                     $encoder = $this->container->get('security.password_encoder');
                     $password = $encoder->encodePassword($user, $plainPassword);
                     $user->setPassword($password);

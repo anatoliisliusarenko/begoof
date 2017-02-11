@@ -38,42 +38,33 @@ class AuthController extends Controller {
     }
 
     public function registerAction(Request $request) {
+    	$error = '';
 
     	$user = new UserEntity();
     	$form = $this->createForm(RegisterForm::class, $user, ['action' => $this->generateUrl('register'), 'method' => 'POST']);
     	$form->handleRequest($request);
 
     	if ($form->isSubmitted() && $form->isValid()) {
+    		$existingUser = $this->get('app.service.user')->getUserByEmail($user->getEmail());
 
-    		// check for existed email address
+    		if ($existingUser == null) {
+    			$newUser = $this->get('app.service.user')->createUser($user->getFullName(), $user->getEmail(), $user->getPassword());
+    			$token = $this->get('app.service.token')->createTokenForRegister($newUser);
 
-    		$em = $this->getDoctrine()->getManager();
-    		$encoder = $this->container->get('security.password_encoder');
-    		$newUser = new UserEntity();
-    		$email = $user->getEmail();
-    		$password = $encoder->encodePassword($newUser, $user->getPassword());
+	    		$this->get('app.service.mailer')->sendRegisterToken($newUser, $token);
 
-    		$newUser->setUsername($email);
-    		$newUser->setEmail($email);
-    		$newUser->setPassword($password);
-    		$newUser->setFullName($user->getFullName());
+	    		$this->addFlash('success', 'User was successfully created, but is blocked for now. Email has been sent to confirm your person. Please check inbox.');
 
-    		$em->persist($newUser);
-    		$em->flush();
-
-    		$token = new TokenEntity($newUser, TokenEntity::$ACTION_REGISTER);
-    		$em->persist($token);
-    		$em->flush();
-
-    		$this->get('app.service.mailer')->sendRegisterToken($newUser, $token);
-
-    		$this->addFlash('success', 'User was successfully created, but is blocked for now. Email has been sent to confirm your person. Please check inbox.');
-
-    		return $this->redirectToRoute('login');
+	    		return $this->redirectToRoute('login');
+    		} else {
+    			// change to form invalidation
+    			$error = 'User with this email address is already existing.';
+    		}
     	}
 
     	return $this->render('AppBundle:Auth:register.html.twig', [
-        	'form' => $form->createView()
+        	'form' => $form->createView(),
+        	'error' => $error
         ]);
     }
 
@@ -82,39 +73,32 @@ class AuthController extends Controller {
     	$form = $this->createForm(RestoreForm::class, $user, ['action' => $this->generateUrl('restore'), 'method' => 'POST']);
     	$form->handleRequest($request);*/
 
+    	$error = '';
 
     	$username = $request->get('_username');
 
 
     	//if ($form->isSubmitted() && $form->isValid()) {
     	if (!empty($username)) {
-    		$user = $this->getDoctrine()
-    					->getRepository('AppBundle:UserEntity')
-						->createQueryBuilder('u')
-						->where('u.username = :username OR u.email = :email')
-						->setParameter('username', $username)
-						->setParameter('email', $username)
-						->getQuery()
-						->getOneOrNullResult();
+    		$user = $this->get('app.service.user')->getUserByUsernameOrEmail($username, $username);
 
 			if ($user != null) {
-				$em = $this->getDoctrine()->getManager();
-				$token = new TokenEntity($user, TokenEntity::$ACTION_RESTORE);
-    			$em->persist($token);
-    			$em->flush();
+				$token = $this->get('app.service.token')->createTokenForRestore($user);
 
     			$this->get('app.service.mailer')->sendRestoreToken($user, $token);
 
 				$this->addFlash('success', 'User was successfully found, but still has old password. Email has been sent to confirm your person. Please check inbox.');
 
     			return $this->redirectToRoute('login');
+			} else {
+				// change to form invalidation
+				$error = 'Username/Email not found';
 			}
-
-    		// user not found message
     	}
 
     	return $this->render('AppBundle:Auth:restore.html.twig', [
         	//'form' => $form->createView()
+        	'error' => $error
         ]);
     }
 }

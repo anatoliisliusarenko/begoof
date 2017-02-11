@@ -16,8 +16,6 @@ class TokenEntity
     public static $ACTION_REGISTER = 'register';
     public static $ACTION_RESTORE = 'restore';
 
-    private $salt = '6a3ee06ea92a5b3bf6c8fefbcaa82f8125255b79';
-
     /**
      * @var int
      *
@@ -58,7 +56,7 @@ class TokenEntity
     /**
     * Counstructor of the class
     */
-    public function __construct(UserEntity $user, $action) {
+    public function __construct(UserEntity $user, string $action, string $value) {
         $availableActions = [self::$ACTION_REGISTER, self::$ACTION_RESTORE];
         
         if (!in_array($action, $availableActions)) {
@@ -68,7 +66,7 @@ class TokenEntity
         $this->userId = $user->getId();
         $this->action = $action;
         $this->user = $user;
-        $this->value = crypt(time(), $this->salt);
+        $this->value = $value;
         $this->created = new \DateTime();
     }
 

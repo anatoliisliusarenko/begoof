@@ -9,7 +9,11 @@ services:
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
     app.service.user:
         class: AppBundle\Service\UserService
-        arguments: ["@doctrine.orm.entity_manager", "@security.token_storage"]
+        arguments: ["@doctrine.orm.entity_manager", "@security.token_storage", "@service_container"]
+
+    app.service.token:
+        class: AppBundle\Service\TokenService
+        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     app.service.mailer:
         class: AppBundle\Service\MailerService
