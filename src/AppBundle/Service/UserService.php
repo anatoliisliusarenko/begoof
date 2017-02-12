@@ -12,10 +12,12 @@ class UserService {
 	protected $em = null;
 	protected $user = null;
 	protected $container = null;
+	protected $tokenService = null;
 
-	public function __construct(EntityManager $em, TokenStorage $tokenStorage, ContainerInterface $container) {
+	public function __construct(EntityManager $em, TokenStorage $tokenStorage, ContainerInterface $container, TokenService $tokenService) {
 		$this->em = $em;
 		$this->container = $container;
+		$this->tokenService = $tokenService;
 		$user = $tokenStorage->getToken()->getUser();
 
 		if ($user instanceof UserEntity) {
@@ -60,5 +62,29 @@ class UserService {
 						->setParameter('email', $username)
 						->getQuery()
 						->getOneOrNullResult();
+	}
+
+	public function removeUser(UserEntity $user) {
+		$this->em->remove($user);
+		$this->em->flush();
+
+		return $this;
+	}
+
+	public function activateUser(UserEntity $user) {
+		$user->setActive(true);
+		$this->em->flush();
+
+		return $this;
+	}
+
+	public function generateTemporaryPassword(UserEntity $user) {
+		$temporaryPassword = $this->tokenService->generateTokenValue();
+        $encoder = $this->container->get('security.password_encoder');
+        $password = $encoder->encodePassword($user, $temporaryPassword);
+        $user->setPassword($password);
+        $this->em->flush();
+
+        return $temporaryPassword;
 	}
 }
