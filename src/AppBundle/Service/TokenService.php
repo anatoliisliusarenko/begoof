@@ -21,6 +21,7 @@ class TokenService {
 		return crypt(uniqid(), $this->container->getParameter('secret'));
 	}
 
+	// move it to user service
 	public function createTokenForRegister(UserEntity $user) {
 		$token = new TokenEntity($user, TokenEntity::$ACTION_REGISTER, $this->generateTokenValue());
 		$this->em->persist($token);
@@ -29,6 +30,7 @@ class TokenService {
 		return $token;
 	}
 
+	// move it to user service
 	public function createTokenForRestore(UserEntity $user) {
 		$token = new TokenEntity($user, TokenEntity::$ACTION_RESTORE, $this->generateTokenValue());
 		$this->em->persist($token);
@@ -41,11 +43,11 @@ class TokenService {
 		return $this->em->getRepository('AppBundle:TokenEntity')->findOneByValue($value);
 	}
 
-	public function isTokenExpired(TokenEntity $token) {
-		$interval = $token->getCreated()->diff(new \DateTime());
-        $differenceInHours = $interval->y*365*24 + $interval->m*30*24 + $interval->d*24 + $interval->h;
+	// move it to token entity
+	public function isTokenValid(TokenEntity $token) {
+		$dateTimeOffset = (new \DateTime())->modify('-24 hour');
 
-        return $differenceInHours > 24;
+        return $token->getCreated() > $dateTimeOffset;
 	}
 
 	public function removeToken(TokenEntity $token) {

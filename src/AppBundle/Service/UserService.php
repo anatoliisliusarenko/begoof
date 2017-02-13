@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\UserEntity;
+use AppBundle\Entity\TokenEntity;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -86,5 +87,17 @@ class UserService {
         $this->em->flush();
 
         return $temporaryPassword;
+	}
+
+	public function hasValidRestoreToken(UserEntity $user) {
+		//maybe make it easier
+		return !!$this->em->getRepository('AppBundle:TokenEntity')
+						  ->createQueryBuilder('t')
+						  ->where('t.userId = :userId AND t.action = :action AND t.created > :datetimeOffset')
+						  ->setParameter('userId', $user->getId())
+						  ->setParameter('action', TokenEntity::$ACTION_RESTORE)
+						  ->setParameter('datetimeOffset', (new \DateTime())->modify('-24 hour'))
+						  ->getQuery()
+						  ->getOneOrNullResult();
 	}
 }

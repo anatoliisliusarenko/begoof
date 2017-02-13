@@ -17,9 +17,9 @@ class VerifyController extends Controller {
 
             if ($token != null && $token->isForRegister()) {
                 $user = $token->getUser();
-                $tokenIsExpired = $this->get('app.service.token')->isTokenExpired($token);
+                $tokenIsValid = $this->get('app.service.token')->isTokenValid($token);
 
-                if (!$tokenIsExpired) {
+                if ($tokenIsValid) {
                     $this->get('app.service.token')->removeToken($token);
                     $this->get('app.service.user')->activateUser($user);
 
@@ -47,9 +47,9 @@ class VerifyController extends Controller {
 
             if ($token != null && $token->isForRestore()) {
                 $user = $token->getUser();
-                $tokenIsExpired = $this->get('app.service.token')->isTokenExpired($token);
+                $tokenIsValid = $this->get('app.service.token')->isTokenValid($token);
 
-                if (!$tokenIsExpired) {
+                if ($tokenIsValid) {
                     $temporaryPassword = $this->get('app.service.user')->generateTemporaryPassword($user);
                     $this->get('app.service.token')->removeToken($token);
                     

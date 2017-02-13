@@ -81,8 +81,10 @@ class AuthController extends Controller {
     	//if ($form->isSubmitted() && $form->isValid()) {
     	if (!empty($username)) {
     		$user = $this->get('app.service.user')->getUserByUsernameOrEmail($username, $username);
+    		$hasValidRestoreToken = $this->get('app.service.user')->hasValidRestoreToken($user);
 
-			if ($user != null) {
+			if ($user != null && !$hasValidRestoreToken) {
+				// clear expired tokens here
 				$token = $this->get('app.service.token')->createTokenForRestore($user);
 
     			$this->get('app.service.mailer')->sendRestoreToken($user, $token);
@@ -90,6 +92,10 @@ class AuthController extends Controller {
 				$this->addFlash('success', 'User was successfully found, but still has old password. Email has been sent to confirm your person. Please check inbox.');
 
     			return $this->redirectToRoute('login');
+			} else if ($user != null && $hasValidRestoreToken) {
+				$this->addFlash('success', 'Email has been already sent to confirm your person. Please check inbox.');
+
+				return $this->redirectToRoute('login');
 			} else {
 				// change to form invalidation
 				$error = 'Username/Email not found';
