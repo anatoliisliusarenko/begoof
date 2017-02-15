@@ -84,7 +84,7 @@ class AuthController extends Controller {
     		$hasValidRestoreToken = $this->get('app.service.user')->hasValidRestoreToken($user);
 
 			if ($user != null && !$hasValidRestoreToken) {
-				// clear expired tokens here
+				$this->get('app.service.token')->clearExpiredRestoreTokens($user);
 				$token = $this->get('app.service.token')->createTokenForRestore($user);
 
     			$this->get('app.service.mailer')->sendRestoreToken($user, $token);

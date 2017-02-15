@@ -90,7 +90,6 @@ class UserService {
 	}
 
 	public function hasValidRestoreToken(UserEntity $user) {
-		//maybe make it easier
 		return !!$this->em->getRepository('AppBundle:TokenEntity')
 						  ->createQueryBuilder('t')
 						  ->where('t.userId = :userId AND t.action = :action AND t.created > :datetimeOffset')
@@ -100,4 +99,5 @@ class UserService {
 						  ->getQuery()
 						  ->getOneOrNullResult();
 	}
+
 }

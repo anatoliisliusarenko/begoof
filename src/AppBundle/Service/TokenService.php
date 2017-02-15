@@ -21,7 +21,17 @@ class TokenService {
 		return crypt(uniqid(), $this->container->getParameter('secret'));
 	}
 
-	// move it to user service
+	public function getTokenByValue(string $value) {
+		return $this->em->getRepository('AppBundle:TokenEntity')->findOneByValue($value);
+	}
+
+	public function removeToken(TokenEntity $token) {
+		$this->em->remove($token);
+		$this->em->flush();
+
+		return $this;
+	}
+
 	public function createTokenForRegister(UserEntity $user) {
 		$token = new TokenEntity($user, TokenEntity::$ACTION_REGISTER, $this->generateTokenValue());
 		$this->em->persist($token);
@@ -30,7 +40,6 @@ class TokenService {
 		return $token;
 	}
 
-	// move it to user service
 	public function createTokenForRestore(UserEntity $user) {
 		$token = new TokenEntity($user, TokenEntity::$ACTION_RESTORE, $this->generateTokenValue());
 		$this->em->persist($token);
@@ -39,20 +48,16 @@ class TokenService {
 		return $token;
 	}
 
-	public function getTokenByValue(string $value) {
-		return $this->em->getRepository('AppBundle:TokenEntity')->findOneByValue($value);
-	}
-
-	// move it to token entity
-	public function isTokenValid(TokenEntity $token) {
-		$dateTimeOffset = (new \DateTime())->modify('-24 hour');
-
-        return $token->getCreated() > $dateTimeOffset;
-	}
-
-	public function removeToken(TokenEntity $token) {
-		$this->em->remove($token);
-		$this->em->flush();
+	public function clearExpiredRestoreTokens(UserEntity $user) {
+		$this->em->getRepository('AppBundle:TokenEntity')
+			  	 ->createQueryBuilder('t')
+			  	 ->delete('AppBundle:TokenEntity', 't')
+			  	 ->where('t.userId = :userId AND t.action = :action AND t.created < :datetimeOffset')
+			  	 ->setParameter('userId', $user->getId())
+			  	 ->setParameter('action', TokenEntity::$ACTION_RESTORE)
+			  	 ->setParameter('datetimeOffset', (new \DateTime())->modify('-24 hour'))
+			  	 ->getQuery()
+			  	 ->getResult();
 
 		return $this;
 	}

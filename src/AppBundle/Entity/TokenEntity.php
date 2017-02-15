@@ -191,5 +191,18 @@ class TokenEntity
     {
         return $this->user;
     }
+
+    /* ===== Helper Methods ===== */
+
+    /**
+    * Checks whether or not token is valid
+    *
+    * @return bool
+    */
+    public function isValid() {
+        $dateTimeOffset = (new \DateTime())->modify('-24 hour');
+
+        return $this->getCreated() > $dateTimeOffset;
+    }
 }
 
