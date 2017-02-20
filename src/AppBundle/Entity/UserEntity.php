@@ -4,7 +4,6 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
-use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -34,10 +33,6 @@ class UserEntity implements AdvancedUserInterface, \Serializable {
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=255, unique=true)
-     *
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     * @Assert\Regex("/^[\w\.\-]+\@[\w\.\-]+$/") //@TODO VALIDATION FOR EMAIL
      */
     private $email;
 
@@ -45,10 +40,6 @@ class UserEntity implements AdvancedUserInterface, \Serializable {
      * @var string
      *
      * @ORM\Column(name="password", type="string", length=255)
-     *
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     * @Assert\GreaterThan(5) //@TODO VALIDATION FOR CONTAINING DIFFERENT TYPE OF CHARACTERS
      */
     private $password;
 
@@ -56,9 +47,6 @@ class UserEntity implements AdvancedUserInterface, \Serializable {
      * @var string
      *
      * @ORM\Column(name="full_name", type="string", length=255)
-     *
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
      */
     private $fullName;
 

@@ -4,9 +4,7 @@ parameters:
 #    parameter_name: value
 
 services:
-#    service_name:
-#        class: AppBundle\Directory\ClassName
-#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+    # services
     app.service.user:
         class: AppBundle\Service\UserService
         arguments: ["@doctrine.orm.entity_manager", "@security.token_storage", "@service_container", "@app.service.token"]
@@ -18,3 +16,10 @@ services:
     app.service.mailer:
         class: AppBundle\Service\MailerService
         arguments: ["@mailer", "@templating"]
+
+    # forms
+    app.form.restore:
+        class: AppBundle\Form\RestoreForm
+        arguments: ["@doctrine.orm.entity_manager", "@app.service.user"]
+        tags:
+          - { name: form.type }

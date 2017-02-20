@@ -10,23 +10,24 @@ use AppBundle\Form\RestoreForm;
 use AppBundle\Entity\UserEntity;
 use AppBundle\Entity\TokenEntity;
 
+use Symfony\Component\Form\FormError;
+
 class AuthController extends Controller {
 	
     public function loginAction(Request $request) {
-    	$user = new UserEntity();
-
-    	$form = $this->createForm(LoginForm::class, $user, ['action' => $this->generateUrl('login'), 'method' => 'POST']);
+    	$form = $this->createForm(LoginForm::class, null, ['action' => $this->generateUrl('login'), 'method' => 'POST']);
 
     	$form->handleRequest($request);
     	
     	//var_dump($this->get('security.authentication_utils'));
 
 
-
     	if ($form->isSubmitted() && $form->isValid()) {
-    		echo "HERE";
+    		die("HERE");
+    		//echo "HERE";
     	} else if ($form->isSubmitted()) {
-    		echo "HERE - 2";
+    		die("HERE - 2");
+    		//echo "HERE - 2";
     	}
 
     	$error = $this->get('security.authentication_utils')->getLastAuthenticationError();
@@ -40,15 +41,15 @@ class AuthController extends Controller {
     public function registerAction(Request $request) {
     	$error = '';
 
-    	$user = new UserEntity();
-    	$form = $this->createForm(RegisterForm::class, $user, ['action' => $this->generateUrl('register'), 'method' => 'POST']);
+    	$form = $this->createForm(RegisterForm::class, null, ['action' => $this->generateUrl('register'), 'method' => 'POST']);
     	$form->handleRequest($request);
 
     	if ($form->isSubmitted() && $form->isValid()) {
-    		$existingUser = $this->get('app.service.user')->getUserByEmail($user->getEmail());
+    		$user = $form->getData();
+    		$existingUser = $this->get('app.service.user')->getUserByEmail($user['email']);
 
     		if ($existingUser == null) {
-    			$newUser = $this->get('app.service.user')->createUser($user->getFullName(), $user->getEmail(), $user->getPassword());
+    			$newUser = $this->get('app.service.user')->createUser($user['full_name'], $user['email'], $user['password']);
     			$token = $this->get('app.service.token')->createTokenForRegister($newUser);
 
 	    		$this->get('app.service.mailer')->sendRegisterToken($newUser, $token);
@@ -69,21 +70,18 @@ class AuthController extends Controller {
     }
 
     public function restoreAction(Request $request) {
-    	/*$user = new UserEntity();
-    	$form = $this->createForm(RestoreForm::class, $user, ['action' => $this->generateUrl('restore'), 'method' => 'POST']);
-    	$form->handleRequest($request);*/
+    	
+    	$form = $this->createForm(RestoreForm::class, null, ['action' => $this->generateUrl('restore'), 'method' => 'POST']);
+    	$form->handleRequest($request);
 
-    	$error = '';
+    	if ($form->isSubmitted() && $form->isValid()) {
+    		$data = $form->getData();
+    		// Can't be null, because form is valid. Form has custom validation.
 
-    	$username = $request->get('_username');
+    		// try to get it from Form class
+    		$user = $this->get('app.service.user')->getUserByUsernameOrEmail($data['username'], $data['username']);
 
-
-    	//if ($form->isSubmitted() && $form->isValid()) {
-    	if (!empty($username)) {
-    		$user = $this->get('app.service.user')->getUserByUsernameOrEmail($username, $username);
-    		$hasValidRestoreToken = $this->get('app.service.user')->hasValidRestoreToken($user);
-
-			if ($user != null && !$hasValidRestoreToken) {
+			if (!$this->get('app.service.user')->hasValidRestoreToken($user)) {
 				$this->get('app.service.token')->clearExpiredRestoreTokens($user);
 				$token = $this->get('app.service.token')->createTokenForRestore($user);
 
@@ -92,19 +90,15 @@ class AuthController extends Controller {
 				$this->addFlash('success', 'User was successfully found, but still has old password. Email has been sent to confirm your person. Please check inbox.');
 
     			return $this->redirectToRoute('login');
-			} else if ($user != null && $hasValidRestoreToken) {
+			} else {
 				$this->addFlash('success', 'Email has been already sent to confirm your person. Please check inbox.');
 
 				return $this->redirectToRoute('login');
-			} else {
-				// change to form invalidation
-				$error = 'Username/Email not found';
 			}
     	}
 
     	return $this->render('AppBundle:Auth:restore.html.twig', [
-        	//'form' => $form->createView()
-        	'error' => $error
+        	'form' => $form->createView()
         ]);
     }
 }

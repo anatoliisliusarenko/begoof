@@ -22,7 +22,10 @@
       </div>
     </form>
 
-    {{ error }}    
+    {{ form_start(form, { 'attr' : { 'novalidate' : 'novalidate' } }) }}
+    {{ form_errors(form) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }}  
 
     <a href="{{ path('register') }}">I want to become a good friend</a><br>
     <a href="{{ path('login') }}" class="text-center">I have already a good friend</a>
