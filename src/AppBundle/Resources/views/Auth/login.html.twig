@@ -6,10 +6,6 @@
 
 	<p class="login-box-msg">Log in to make good things</p>
 
-    {% if error is not empty %}
-    Error - {{ error.messageKey }}
-    {% endif %}
-
     <form action="{{ path('login') }}" method="post">
       <div class="form-group has-feedback">
         <input type="text" class="form-control" placeholder="Username/Email" name="_username">

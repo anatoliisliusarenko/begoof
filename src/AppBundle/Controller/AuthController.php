@@ -30,10 +30,20 @@ class AuthController extends Controller {
     		//echo "HERE - 2";
     	}
 
+
+
     	$error = $this->get('security.authentication_utils')->getLastAuthenticationError();
 
+    	if ($error) {
+    		$form->get('username')->addError(new FormError($error->getMessageKey()));
+
+    		print(var_dump($error->getMessageKey()));
+
+    		$form->get('username')->setData($this->get('security.authentication_utils')->getLastUsername());
+
+    	}
+
         return $this->render('AppBundle:Auth:login.html.twig', [
-        	'error' => $error,
         	'form' => $form->createView()
         ]);
     }
