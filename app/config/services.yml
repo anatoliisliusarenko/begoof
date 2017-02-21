@@ -23,3 +23,9 @@ services:
         arguments: ["@doctrine.orm.entity_manager", "@app.service.user"]
         tags:
           - { name: form.type }
+
+    app.form.register:
+        class: AppBundle\Form\RegisterForm
+        arguments: ["@doctrine.orm.entity_manager", "@app.service.user"]
+        tags:
+          - { name: form.type }

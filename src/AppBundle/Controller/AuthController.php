@@ -39,33 +39,26 @@ class AuthController extends Controller {
     }
 
     public function registerAction(Request $request) {
-    	$error = '';
-
+    	
     	$form = $this->createForm(RegisterForm::class, null, ['action' => $this->generateUrl('register'), 'method' => 'POST']);
     	$form->handleRequest($request);
 
     	if ($form->isSubmitted() && $form->isValid()) {
     		$user = $form->getData();
-    		$existingUser = $this->get('app.service.user')->getUserByEmail($user['email']);
 
-    		if ($existingUser == null) {
-    			$newUser = $this->get('app.service.user')->createUser($user['full_name'], $user['email'], $user['password']);
-    			$token = $this->get('app.service.token')->createTokenForRegister($newUser);
+			$newUser = $this->get('app.service.user')->createUser($user['full_name'], $user['email'], $user['password']);
+			$token = $this->get('app.service.token')->createTokenForRegister($newUser);
 
-	    		$this->get('app.service.mailer')->sendRegisterToken($newUser, $token);
+    		$this->get('app.service.mailer')->sendRegisterToken($newUser, $token);
 
-	    		$this->addFlash('success', 'User was successfully created, but is blocked for now. Email has been sent to confirm your person. Please check inbox.');
+    		$this->addFlash('success', 'User was successfully created, but is blocked for now. Email has been sent to confirm your person. Please check inbox.');
 
-	    		return $this->redirectToRoute('login');
-    		} else {
-    			// change to form invalidation
-    			$error = 'User with this email address is already existing.';
-    		}
+    		return $this->redirectToRoute('login');
+    		
     	}
 
     	return $this->render('AppBundle:Auth:register.html.twig', [
-        	'form' => $form->createView(),
-        	'error' => $error
+        	'form' => $form->createView()
         ]);
     }
 

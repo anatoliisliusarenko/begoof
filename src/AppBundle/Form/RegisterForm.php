@@ -14,9 +14,22 @@ use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\NotBlank; 
 use Symfony\Component\Validator\Constraints\Length; 
 use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Constraints\Callback;
+use Symfony\Component\Validator\Context\ExecutionContext;
+use Doctrine\ORM\EntityManager;
+use AppBundle\Service\UserService;
 
 
 class RegisterForm extends AbstractType {
+
+	protected $em = null;
+	protected $userService = null;
+
+	public function __construct(EntityManager $em, UserService $userService) {
+		$this->em = $em;
+		$this->userService = $userService;
+	}
+
 	public function buildForm(FormBuilderInterface $builder, array $options) {
 		$builder
 			->setAction($options['action'])
@@ -32,7 +45,8 @@ class RegisterForm extends AbstractType {
 				'label' => 'Email',
 				'constraints' => [
 					new NotBlank(),
-					new Regex('/^[\w\.\-]+\@[\w\.\-]+$/')
+					new Regex('/^[\w\.\-]+\@[\w\.\-]+$/'),
+					new Callback([$this, 'validate'])
 				]
 			])
 			->add('password', RepeatedType::class, [
@@ -64,4 +78,14 @@ class RegisterForm extends AbstractType {
 		;
 
 	}
+
+	public function validate($email, ExecutionContext $context)
+    {
+    	$user = $this->userService->getUserByEmail($email);
+
+    	if ($user) {
+    		$context->addViolation('User with this email address is already existing');
+    	}
+
+    }
 }
