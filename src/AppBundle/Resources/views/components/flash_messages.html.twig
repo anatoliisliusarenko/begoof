@@ -1,0 +1,9 @@
+<script type="text/javascript">
+{% for message in app.session.flashBag.get('success') %}
+  alertify.success('{{ message }}', 10);
+{% endfor %}
+
+{% for message in app.session.flashBag.get('error') %}
+  alertify.error('{{ message }}', 10);
+{% endfor %}
+</script>

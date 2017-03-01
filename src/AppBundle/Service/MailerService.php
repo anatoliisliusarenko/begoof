@@ -20,7 +20,7 @@ class MailerService {
 					->setSubject('Registration Token | begoof.com')
 					->setFrom('support@begoof.com')
 					->setTo($user->getEmail())
-					->setBody($this->templating->render('AppBundle:EmailTemplates:send_register_token.html.twig', ['fullName' => $user->getFullName(), 'token' => $token->getValue()]), 'text/html');
+					->setBody($this->templating->render('AppBundle:emailTemplates:send_register_token.html.twig', ['fullName' => $user->getFullName(), 'token' => $token->getValue()]), 'text/html');
 
 		$this->mailer->send($message);
 	}
@@ -30,7 +30,7 @@ class MailerService {
 					->setSubject('Restoration Token | begoof.com')
 					->setFrom('support@begoof.com')
 					->setTo($user->getEmail())
-					->setBody($this->templating->render('AppBundle:EmailTemplates:send_restore_token.html.twig', ['fullName' => $user->getFullName(), 'token' => $token->getValue()]), 'text/html');
+					->setBody($this->templating->render('AppBundle:emailTemplates:send_restore_token.html.twig', ['fullName' => $user->getFullName(), 'token' => $token->getValue()]), 'text/html');
 
 		$this->mailer->send($message);
 	}
@@ -40,7 +40,7 @@ class MailerService {
 					->setSubject('Temporary Password | begoof.com')
 					->setFrom('support@begoof.com')
 					->setTo($user->getEmail())
-					->setBody($this->templating->render('AppBundle:EmailTemplates:send_temporary_password.html.twig', ['fullName' => $user->getFullName(), 'password' => $password]), 'text/html');
+					->setBody($this->templating->render('AppBundle:emailTemplates:send_temporary_password.html.twig', ['fullName' => $user->getFullName(), 'password' => $password]), 'text/html');
 
 		$this->mailer->send($message);
 	}

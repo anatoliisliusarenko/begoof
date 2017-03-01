@@ -1,0 +1,8 @@
+.login-logo img {
+	width: 100px;
+	height: auto;
+}
+
+.alertify-notifier {
+	z-index: 100000;
+}

@@ -4,7 +4,7 @@
 	{{ parent() }}
 
 	<!-- iCheck -->
-  	<link rel="stylesheet" href="{{ asset('bundles/app/icheck/square/blue.css') }}">
+  	<link rel="stylesheet" href="{{ asset('bundles/app/plugins/icheck/square/blue.css') }}">
 {% endblock %}
 
 {% set body_class = 'hold-transition login-page' %}
@@ -12,7 +12,7 @@
 {% block body %}
 	<div class="login-box">
 	  <div class="login-logo">
-	    <a href="#"><img src="{{ asset('begoof.png') }}" width="100px" height="auto"><b>Be Good</b> Friend</a>
+	    <a href="{{ path('default') }}"><img src="{{ asset('bundles/app/images/begoof.png') }}"><b>Be Good</b> Friend</a>
 	  </div>
 	  <!-- /.login-logo -->
 	  <div class="login-box-body">
@@ -30,7 +30,7 @@
 	{{ parent() }}
 
 	<!-- iCheck -->
-	<script src="{{ asset('bundles/app/icheck/icheck.min.js') }}"></script>
+	<script src="{{ asset('bundles/app/plugins/icheck/icheck.min.js') }}"></script>
 
 	<script>
 	  $(function () {

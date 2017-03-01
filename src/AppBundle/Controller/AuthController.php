@@ -10,37 +10,17 @@ use AppBundle\Form\RestoreForm;
 use AppBundle\Entity\UserEntity;
 use AppBundle\Entity\TokenEntity;
 
-use Symfony\Component\Form\FormError;
-
 class AuthController extends Controller {
 	
     public function loginAction(Request $request) {
     	$form = $this->createForm(LoginForm::class, null, ['action' => $this->generateUrl('login'), 'method' => 'POST']);
 
-    	$form->handleRequest($request);
-    	
-    	//var_dump($this->get('security.authentication_utils'));
-
-
-    	if ($form->isSubmitted() && $form->isValid()) {
-    		die("HERE");
-    		//echo "HERE";
-    	} else if ($form->isSubmitted()) {
-    		die("HERE - 2");
-    		//echo "HERE - 2";
-    	}
-
-
-
-    	$error = $this->get('security.authentication_utils')->getLastAuthenticationError();
+    	$security = $this->get('security.authentication_utils');
+    	$error = $security->getLastAuthenticationError();
 
     	if ($error) {
-    		$form->get('username')->addError(new FormError($error->getMessageKey()));
-
-    		print(var_dump($error->getMessageKey()));
-
-    		$form->get('username')->setData($this->get('security.authentication_utils')->getLastUsername());
-
+    		$this->addFlash('error', $error->getMessageKey());
+    		$form->get('username')->setData($security->getLastUsername());
     	}
 
         return $this->render('AppBundle:Auth:login.html.twig', [
@@ -79,9 +59,6 @@ class AuthController extends Controller {
 
     	if ($form->isSubmitted() && $form->isValid()) {
     		$data = $form->getData();
-    		// Can't be null, because form is valid. Form has custom validation.
-
-    		// try to get it from Form class
     		$user = $this->get('app.service.user')->getUserByUsernameOrEmail($data['username'], $data['username']);
 
 			if (!$this->get('app.service.user')->hasValidRestoreToken($user)) {

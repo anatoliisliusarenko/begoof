@@ -9,10 +9,10 @@
   		
   		{% block header_stylesheets %}
         <!-- Bootstrap 3.3.6 -->
-        <link rel="stylesheet" href="{{ asset('bundles/app/bootstrap/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('bundles/app/plugins/bootstrap/css/bootstrap.min.css') }}">
         <!-- AlertifyJS 1.9.0 -->
-        <link rel="stylesheet" href="{{ asset('bundles/app/alertifyjs/css/alertify.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('bundles/app/alertifyjs/css/themes/default.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('bundles/app/plugins/alertifyjs/css/alertify.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('bundles/app/plugins/alertifyjs/css/themes/default.min.css') }}">
         <!-- Font Awesome -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
         <!-- Ionicons -->
@@ -21,6 +21,9 @@
         <link rel="stylesheet" href="{{ asset('bundles/app/css/theme.min.css') }}">
       {% endblock %}
 
+      <!-- Custom Styles -->
+      <link rel="stylesheet" href="{{ asset('bundles/app/css/custom.css') }}">
+      
   		<link rel="icon" type="image/x-icon" href="{{ asset('begoof.png') }}" />
 
   		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -34,24 +37,19 @@
 		
 		{% block body %}{% endblock %}
 
+    {% include 'AppBundle:components:page_context.html.twig' %}
+
 		{% block body_javascripts %}
       <!-- jQuery 2.2.3 -->
-      <script src="{{ asset('bundles/app/jquery/jquery-2.2.3.min.js') }}"></script>
+      <script src="{{ asset('bundles/app/plugins/jquery/jquery-2.2.3.min.js') }}"></script>
       <!-- Bootstrap 3.3.6 -->
-      <script src="{{ asset('bundles/app/bootstrap/js/bootstrap.min.js') }}"></script>
+      <script src="{{ asset('bundles/app/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
       <!-- AlertifyJS 1.9.0 -->
-      <script src="{{ asset('bundles/app/alertifyjs/alertify.min.js') }}"></script>
+      <script src="{{ asset('bundles/app/plugins/alertifyjs/alertify.min.js') }}"></script>
 
-      <script type="text/javascript">
-        {% for message in app.session.flashBag.get('success') %}
-          alertify.success('{{ message }}', 10);
-        {% endfor %}
-
-        {% for message in app.session.flashBag.get('error') %}
-          alertify.error('{{ message }}', 10);
-        {% endfor %}
-      </script>
-      
     {% endblock %}
+
+    {% include 'AppBundle:components:flash_messages.html.twig' %}
+
 	</body>
 </html>

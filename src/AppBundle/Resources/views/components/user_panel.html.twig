@@ -1,0 +1,9 @@
+<div class="user-panel">
+	<div class="pull-left image">
+	  <img src="{{ asset('bundles/app/images/begoof.png') }}" class="img-circle" alt="Be Good Friend">
+	</div>
+	<div class="pull-left info">
+	  <p>Today is {{ "now"|date("l") }}</p>
+	  <a href="#" data-toggle="tooltip" data-original-title="Who has birthday in {{ "now"|date("F") }}?"><i class="fa fa-calendar-check-o text-info"></i> {{ "now"|date("F jS, Y") }}</a>
+	</div>
+</div>

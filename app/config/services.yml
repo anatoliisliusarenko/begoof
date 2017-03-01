@@ -29,7 +29,3 @@ services:
         arguments: ["@doctrine.orm.entity_manager", "@app.service.user"]
         tags:
           - { name: form.type }
-
-    # handlers
-    app.handler.authentication:
-        class: AppBundle\Handler\AuthenticationHandler

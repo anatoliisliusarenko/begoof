@@ -21,7 +21,6 @@ security:
                 check_path: login
                 username_parameter: login_form[username]
                 password_parameter: login_form[password]
-                #failure_handler: app.handler.authentication
             logout:
                 path: logout
                 target: default
