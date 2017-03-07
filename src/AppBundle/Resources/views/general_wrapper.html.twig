@@ -299,17 +299,3 @@
     <!-- ./wrapper -->
 
 {% endblock %}
-
-{% block body_javascripts %}
-    {{ parent() }}
-
-    <!-- SlimScroll -->
-    <script src="{{ asset('bundles/app/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
-    <!-- FastClick -->
-    <script src="{{ asset('bundles/app/plugins/fastclick/fastclick.min.js') }}"></script>
-    <!-- App -->
-    <script src="{{ asset('bundles/app/js/app.min.js') }}"></script>
-    <!-- Demo -->
-    <script src="{{ asset('bundles/app/js/demo.js') }}"></script>
-
-{% endblock %}

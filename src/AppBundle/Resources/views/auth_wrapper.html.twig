@@ -4,7 +4,7 @@
 	{{ parent() }}
 
 	<!-- iCheck -->
-  	<link rel="stylesheet" href="{{ asset('bundles/app/plugins/icheck/square/blue.css') }}">
+  	<link rel="stylesheet" href="{{ asset('bundles/app/lib/icheck/square/blue.css') }}">
 {% endblock %}
 
 {% set body_class = 'hold-transition login-page' %}
@@ -24,21 +24,4 @@
 	</div>
 	<!-- /.login-box -->
 
-{% endblock %}
-
-{% block body_javascripts %}
-	{{ parent() }}
-
-	<!-- iCheck -->
-	<script src="{{ asset('bundles/app/plugins/icheck/icheck.min.js') }}"></script>
-
-	<script>
-	  $(function () {
-	    $('input').iCheck({
-	      checkboxClass: 'icheckbox_square-blue',
-	      radioClass: 'iradio_square-blue',
-	      increaseArea: '20%' // optional
-	    });
-	  });
-	</script>
 {% endblock %}

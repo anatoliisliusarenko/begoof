@@ -1,7 +1,7 @@
 <script type="text/javascript">
-var pageContext = pageContext || {};
+window.pageContext = window.pageContext || {};
 
-pageContext.bundle = "{{ app.request.attributes.get('_controller')|split('\\')[0]|split('Bundle')[0] }}";
-pageContext.controller = "{{ app.request.attributes.get('_controller')|split('\\')[2]|split('Controller')[0] }}";
-pageContext.action = "{{ app.request.attributes.get('_controller')|split('::')[1]|split('Action')[0] }}";
+window.pageContext.bundle = "{{ app.request.attributes.get('_controller')|split('\\')[0]|split('Bundle')[0] }}";
+window.pageContext.controller = "{{ app.request.attributes.get('_controller')|split('\\')[2]|split('Controller')[0] }}";
+window.pageContext.action = "{{ app.request.attributes.get('_controller')|split('::')[1]|split('Action')[0] }}";
 </script>

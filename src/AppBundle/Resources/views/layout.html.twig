@@ -9,10 +9,10 @@
   		
   		{% block header_stylesheets %}
         <!-- Bootstrap 3.3.6 -->
-        <link rel="stylesheet" href="{{ asset('bundles/app/plugins/bootstrap/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('bundles/app/lib/bootstrap/css/bootstrap.min.css') }}">
         <!-- AlertifyJS 1.9.0 -->
-        <link rel="stylesheet" href="{{ asset('bundles/app/plugins/alertifyjs/css/alertify.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('bundles/app/plugins/alertifyjs/css/themes/default.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('bundles/app/lib/alertifyjs/css/alertify.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('bundles/app/lib/alertifyjs/css/themes/default.min.css') }}">
         <!-- Font Awesome -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
         <!-- Ionicons -->
@@ -21,10 +21,14 @@
         <link rel="stylesheet" href="{{ asset('bundles/app/css/theme.min.css') }}">
       {% endblock %}
 
+      
+
+      
+
       <!-- Custom Styles -->
       <link rel="stylesheet" href="{{ asset('bundles/app/css/custom.css') }}">
       
-  		<link rel="icon" type="image/x-icon" href="{{ asset('begoof.png') }}" />
+  		<link rel="icon" type="image/x-icon" href="{{ asset('bundles/app/images/begoof.png') }}" />
 
   		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -39,13 +43,23 @@
 
     {% include 'AppBundle:components:page_context.html.twig' %}
 
+      <script type="text/javascript">
+
+        baseUrl = "{{ asset('bundles/app/js/components') }}";
+      </script>
+    
+    
+    <script data-main="{{ asset('bundles/app/js/main') }}" src="{{ asset('bundles/app/lib/requirejs/require.js') }}"></script>
+
+
 		{% block body_javascripts %}
+
       <!-- jQuery 2.2.3 -->
-      <script src="{{ asset('bundles/app/plugins/jquery/jquery-2.2.3.min.js') }}"></script>
+      <!--<script src="{{ asset('bundles/app/lib/jquery/jquery-2.2.3.min.js') }}"></script>-->
       <!-- Bootstrap 3.3.6 -->
-      <script src="{{ asset('bundles/app/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
+      <!--<script src="{{ asset('bundles/app/lib/bootstrap/js/bootstrap.min.js') }}"></script>-->
       <!-- AlertifyJS 1.9.0 -->
-      <script src="{{ asset('bundles/app/plugins/alertifyjs/alertify.min.js') }}"></script>
+      <!--<script src="{{ asset('bundles/app/lib/alertifyjs/alertify.min.js') }}"></script>-->
 
     {% endblock %}
 
